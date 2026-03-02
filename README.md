@@ -1,98 +1,22 @@
-Procurement & Inventory Analytics System
+Procurement/Inventory Management System
+
 Overview
+This project is an end-to-end Procurement and Inventory Analytics System built using Java (JDBC) and MySQL. It simulates a real-world procurement workflow including vendor management, product cataloging, inventory tracking, and purchase order processing. The system is designed with a fully normalized relational schema and focuses on backend engineering principles such as data integrity, transaction management, and analytical reporting.
 
-An end-to-end backend system that simulates a real-world procurement and inventory workflow using Java (JDBC) and MySQL. The system implements normalized database design, transaction-safe order processing, and analytical SQL reporting. A business intelligence dashboard layer is added for data visualization.
+System Design
+The database consists of five core tables: vendors, products, inventory, purchase_orders, and order_items. The schema follows normalization principles (3NF) with proper foreign key relationships to ensure referential integrity. Inventory is mapped one-to-one with products, while purchase orders are linked to vendors and order items are linked to both products and orders.
 
-This project demonstrates backend engineering, database design, ACID compliance, and analytics integration.
-Tech Stack
-Java (JDBC)
-MySQL
-SQL (Joins, Aggregations, Window Functions)
-Transaction Management (ACID)
-Power BI (Analytics Dashboard)
+Dataset Scale
+To simulate realistic business operations, synthetic data was generated programmatically. The system currently includes 10 vendors, 30 products, inventory records for all products, 200+ purchase orders, 600+ order items, and approximately 6 months of transactional data. All purchase order totals are calculated using quantity × unit_price to maintain logical consistency across the system.
 
-Dataset Scale (Synthetic Business Simulation)
-To simulate real-world procurement activity, a synthetic dataset was generated programmatically while maintaining referential integrity.
-10 Vendors
-30 Products
-Inventory tracking for all products
-200+ Purchase Orders
-600+ Order Items
-6 months of transaction history
+Transaction Management
+Order placement is implemented using manual transaction control with setAutoCommit(false), commit(), and rollback(). If inventory validation fails at any stage, the entire transaction is rolled back to prevent partial order insertion or inconsistent stock updates. This ensures atomicity and consistency, demonstrating ACID compliance.
 
-All purchase order totals are calculated using:
-quantity × unit_price
-This ensures logical consistency between order items and total spend.
+Analytical Reporting
+The project includes advanced SQL reports using joins, aggregations, and window functions. Reports include vendor spend analysis, product demand ranking, monthly purchase trends, running cumulative spend, low-stock alerts, vendor ranking using RANK(), product demand ranking using DENSE_RANK(), and stock risk ranking. These queries demonstrate strong SQL proficiency beyond basic CRUD operations.
 
-Database Schema
+Dashboard Integration
+A Power BI dashboard is built on top of the MySQL database to visualize key performance indicators such as total spend, total orders, vendor ranking, product demand trends, and low-stock alerts. This adds a business intelligence layer to the backend system and transforms transactional data into actionable insights.
 
-Tables:
- vendors
- products
- inventory
- purchase_orders
- order_items
-
-Key Design Principles:
- Fully normalized schema (3NF)
- Foreign key constraints enforced
- Inventory mapped 1:1 with products
- Orders mapped to vendors
- Order items mapped to both orders and products
-
-Core Features
-1. Transaction-Safe Order Processing
-   Manual transaction control implemented using:
-     setAutoCommit(false)
-     commit()
-     rollback()
-
-  If any inventory validation fails:
-     The entire transaction is rolled back
-     No partial order is inserted
-     No stock is deducted
-This guarantees atomicity and consistency.
-
-2. Inventory Management
-Real-time stock deduction during order placement
-Stock validation before deduction
-Low-stock detection using reorder levels
-
-3. Analytical SQL Reports
-Implemented using joins, aggregations, and window functions:
-Vendor Spend Report
-Product Demand Report
-Monthly Purchase Trend
-Low Stock Alert
-Top Selling Products
-Vendor Ranking using RANK()
-Product Demand Ranking using DENSE_RANK()
-Running Monthly Spend using SUM() OVER()
-Stock Risk Ranking
-Dashboard Layer
-
-Power BI dashboard built on top of the MySQL database including:
-Total Spend KPI
-Total Orders KPI
-Vendor Spend Ranking
-Monthly Spend Trend
-Product Demand Analysis
-Low Stock Alerts
-Running Cumulative Spend
-This converts backend data into actionable business insights.
-
-How to Run
-Execute schema.sql to create tables.
-Execute sample_data.sql to populate base data.
-Run Java application (Main.java).
-Execute reports.sql for analytical queries.
-Connect Power BI to procurement_db for dashboard visualization.
-
-Learning Outcomes
-Designing normalized relational schemas
-Implementing transaction management in JDBC
-Writing analytical SQL with window functions
-Maintaining referential integrity
-Generating synthetic datasets for realistic simulation
-
-Building end-to-end data flow from backend to dashboard
+Key Takeaways
+This project demonstrates backend development using JDBC, normalized database design, transaction-safe processing, analytical SQL with window functions, synthetic data simulation, and integration of backend systems with a BI dashboard for end-to-end data visualization.
