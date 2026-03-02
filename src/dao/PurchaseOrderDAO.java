@@ -1,26 +1,24 @@
 package dao;
 
-import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class PurchaseOrderDAO {
 
-    public int createPurchaseOrder(int vendorId, double totalAmount) {
+    public int createPurchaseOrder(Connection con, int vendorId) throws SQLException {
+
+        String sql = "INSERT INTO purchase_orders (vendor_id, order_date, total_amount) VALUES (?, ?, ?)";
 
         int orderId = 0;
 
-        try {
-            Connection con = DBConnection.getConnection();
-
-            String sql = "INSERT INTO purchase_orders (vendor_id, order_date, total_amount) VALUES (?, ?, ?)";
-            PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, vendorId);
             ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            ps.setDouble(3, totalAmount);
+            ps.setDouble(3, 0.0); // temporary, will calculate later
 
             ps.executeUpdate();
 
@@ -28,11 +26,6 @@ public class PurchaseOrderDAO {
             if (rs.next()) {
                 orderId = rs.getInt(1);
             }
-
-            con.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return orderId;
