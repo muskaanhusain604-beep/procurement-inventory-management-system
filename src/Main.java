@@ -1,69 +1,80 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-//import dao.VendorDAO;
-//
-//public class Main {
-//    public static void main(String[] args) {
-//
-//        VendorDAO vendorDAO = new VendorDAO();
-//        vendorDAO.getAllVendors();
-//    }
-//}
-//import dao.PurchaseOrderDAO;
-
-//public class Main {
-//    public static void main(String[] args) {
-//
-//        PurchaseOrderDAO po = new PurchaseOrderDAO();
-//
-//        int orderId = po.createPurchaseOrder(1, 120000);
-//
-//        System.out.println("Purchase Order Created with ID: " + orderId);
-//    }
-//}
-
-//import dao.PurchaseOrderDAO;
-//import dao.OrderItemDAO;
-//
-//public class Main {
-//    public static void main(String[] args) {
-//
-//        PurchaseOrderDAO poDAO = new PurchaseOrderDAO();
-//        OrderItemDAO itemDAO = new OrderItemDAO();
-//
-//        int orderId = poDAO.createPurchaseOrder(1, 120000);
-//
-//        itemDAO.addOrderItem(orderId, 101, 5);
-//        itemDAO.addOrderItem(orderId, 102, 3);
-//
-//        System.out.println("Order and items added successfully!");
-//    }
-//}
-
 import dao.PurchaseOrderDAO;
 import dao.OrderItemDAO;
 import dao.InventoryDAO;
+import util.DBConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class Main {
+
     public static void main(String[] args) {
 
         PurchaseOrderDAO poDAO = new PurchaseOrderDAO();
         OrderItemDAO itemDAO = new OrderItemDAO();
         InventoryDAO inventoryDAO = new InventoryDAO();
 
-        // 1 Create purchase order
-        int orderId = poDAO.createPurchaseOrder(1, 120000);
+        Connection con = null;
 
-        // 2 Add order items + update inventory
-        itemDAO.addOrderItem(orderId, 101, 5);
-        if (!inventoryDAO.reduceStock(101, 5)) return;
+        try {
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false); // Start transaction
 
-        itemDAO.addOrderItem(orderId, 102, 3);
-        if (!inventoryDAO.reduceStock(102, 3)) return;
+            int orderId = poDAO.createPurchaseOrder(con, 1);
 
-        itemDAO.addOrderItem(orderId, 103, 2);
-        if (!inventoryDAO.reduceStock(103, 2)) return;
+            double totalAmount = 0;
 
-        System.out.println("Order placed and inventory updated!");
+            // Item 1
+            int qty1 = 5000;
+            double price1 = 60000;
+            itemDAO.addOrderItem(con, orderId, 101, qty1);
+            if (!inventoryDAO.reduceStock(con, 101, qty1)) {
+                throw new Exception("Stock failed for product 101");
+            }
+            totalAmount += qty1 * price1;
+
+            // Item 2
+            int qty2 = 3;
+            double price2 = 15000;
+            itemDAO.addOrderItem(con, orderId, 102, qty2);
+            if (!inventoryDAO.reduceStock(con, 102, qty2)) {
+                throw new Exception("Stock failed for product 102");
+            }
+            totalAmount += qty2 * price2;
+
+            // Update total safely
+            String updateSql = "UPDATE purchase_orders SET total_amount = ? WHERE order_id = ?";
+            try (PreparedStatement ps = con.prepareStatement(updateSql)) {
+                ps.setDouble(1, totalAmount);
+                ps.setInt(2, orderId);
+                ps.executeUpdate();
+            }
+
+            con.commit();
+            System.out.println("✅ Order placed successfully. Order ID: " + orderId);
+
+        } catch (Exception e) {
+
+            try {
+                if (con != null) {
+                    con.rollback();
+                    System.out.println("❌ Transaction rolled back.");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
