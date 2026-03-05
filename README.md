@@ -1,22 +1,138 @@
-Procurement/Inventory Management System
+# Procurement / Inventory Management System
 
-Overview
-This project is an end-to-end Procurement and Inventory Analytics System built using Java (JDBC) and MySQL. It simulates a real-world procurement workflow including vendor management, product cataloging, inventory tracking, and purchase order processing. The system is designed with a fully normalized relational schema and focuses on backend engineering principles such as data integrity, transaction management, and analytical reporting.
+## Overview
+This project is an end-to-end **Procurement and Inventory Analytics System** built using **Java (JDBC) and MySQL**.
 
-System Design
-The database consists of five core tables: vendors, products, inventory, purchase_orders, and order_items. The schema follows normalization principles (3NF) with proper foreign key relationships to ensure referential integrity. Inventory is mapped one-to-one with products, while purchase orders are linked to vendors and order items are linked to both products and orders.
+It simulates a real-world procurement workflow including:
 
-Dataset Scale
-To simulate realistic business operations, synthetic data was generated programmatically. The system currently includes 10 vendors, 30 products, inventory records for all products, 200+ purchase orders, 600+ order items, and approximately 6 months of transactional data. All purchase order totals are calculated using quantity × unit_price to maintain logical consistency across the system.
+- Vendor management  
+- Product cataloging  
+- Inventory tracking  
+- Purchase order processing  
 
-Transaction Management
-Order placement is implemented using manual transaction control with setAutoCommit(false), commit(), and rollback(). If inventory validation fails at any stage, the entire transaction is rolled back to prevent partial order insertion or inconsistent stock updates. This ensures atomicity and consistency, demonstrating ACID compliance.
+The system is designed with a **fully normalized relational schema** and focuses on backend engineering principles such as:
 
-Analytical Reporting
-The project includes advanced SQL reports using joins, aggregations, and window functions. Reports include vendor spend analysis, product demand ranking, monthly purchase trends, running cumulative spend, low-stock alerts, vendor ranking using RANK(), product demand ranking using DENSE_RANK(), and stock risk ranking. These queries demonstrate strong SQL proficiency beyond basic CRUD operations.
+- Data integrity  
+- Transaction management  
+- Analytical reporting  
 
-Dashboard Integration
-A Power BI dashboard is built on top of the MySQL database to visualize key performance indicators such as total spend, total orders, vendor ranking, product demand trends, and low-stock alerts. This adds a business intelligence layer to the backend system and transforms transactional data into actionable insights.
+---
 
-Key Takeaways
-This project demonstrates backend development using JDBC, normalized database design, transaction-safe processing, analytical SQL with window functions, synthetic data simulation, and integration of backend systems with a BI dashboard for end-to-end data visualization.
+## System Design
+The database consists of five core tables:
+
+- vendors  
+- products  
+- inventory  
+- purchase_orders  
+- order_items  
+
+The schema follows **Third Normal Form (3NF)** with proper foreign key relationships to ensure referential integrity.
+
+Key relationships:
+
+- **Products → Vendors** (many-to-one)  
+- **Inventory → Products** (one-to-one)  
+- **Purchase Orders → Vendors**  
+- **Order Items → Products and Orders**
+
+This structure ensures consistent data modeling and eliminates redundancy.
+
+---
+
+## Dataset Scale
+To simulate realistic business operations, synthetic data was generated programmatically.
+
+The dataset currently includes:
+
+- 10 vendors  
+- 30 products  
+- Inventory records for all products  
+- 200+ purchase orders  
+- 600+ order items  
+- Approximately **6 months of transactional data**
+
+All purchase order totals are calculated using:
+
+```
+total_amount = quantity × unit_price
+```
+
+This maintains logical consistency across the entire system.
+
+---
+
+## Transaction Management
+Order placement is implemented using **manual transaction control in JDBC**.
+
+The system uses:
+
+- `setAutoCommit(false)`  
+- `commit()`  
+- `rollback()`  
+
+Workflow:
+
+1. A purchase order is created.
+2. Inventory availability is checked.
+3. Stock is deducted only if sufficient quantity exists.
+4. If any validation fails, the transaction is rolled back.
+
+This prevents:
+
+- Partial order insertion  
+- Incorrect stock updates  
+- Data inconsistency  
+
+The process demonstrates **ACID-compliant transaction management**.
+
+---
+
+## Analytical Reporting
+The project includes advanced SQL reports built using:
+
+- JOIN operations  
+- Aggregations  
+- Window functions  
+
+Implemented reports include:
+
+- Vendor spend analysis  
+- Product demand ranking  
+- Monthly purchase trends  
+- Running cumulative spend  
+- Low stock alerts  
+- Vendor ranking using `RANK()`  
+- Product demand ranking using `DENSE_RANK()`  
+- Stock risk ranking  
+
+These queries demonstrate strong SQL proficiency beyond basic CRUD operations.
+
+---
+
+## Dashboard Integration
+A **Power BI dashboard** is built on top of the MySQL database to visualize key performance indicators.
+
+The dashboard displays:
+
+- Total procurement spend  
+- Total purchase orders  
+- Vendor ranking  
+- Product demand trends  
+- Low-stock alerts  
+
+This adds a **business intelligence layer** to the backend system and transforms transactional data into actionable insights.
+
+---
+
+## Key Takeaways
+This project demonstrates:
+
+- Backend development using **Java and JDBC**
+- **Normalized relational database design (3NF)**
+- Transaction-safe order processing
+- Advanced **SQL analytics with window functions**
+- Synthetic dataset generation for realistic workflows
+- Integration of backend systems with **Power BI dashboards**
+
+Together, these components simulate a real-world **procurement and inventory analytics platform**.
