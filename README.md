@@ -23,36 +23,18 @@ The system is designed with a **fully normalized relational schema** and focuses
 ```mermaid
 flowchart TD
 
-A[User / Application] --> B[Java Application Layer]
-B --> C[JDBC Connectivity]
-C --> D[(MySQL Database)]
+A[Java Application] --> B[JDBC]
+B --> C[(MySQL Database)]
 
-D --> E[vendors table]
-D --> F[products table]
-D --> G[inventory table]
-D --> H[purchase_orders table]
-D --> I[order_items table]
+C --> D[vendors]
+C --> E[products]
+C --> F[inventory]
+C --> G[purchase_orders]
+C --> H[order_items]
 
-B --> J[Inventory Management Logic]
-B --> K[Purchase Order Processing]
-B --> L[Transaction Management]
+C --> I[SQL Analytical Reports]
+I --> J[Power BI Dashboard]
 
-L --> M[setAutoCommit false]
-L --> N[commit]
-L --> O[rollback]
-
-D --> P[Analytical SQL Reports]
-
-P --> Q[Vendor Spend Analysis]
-P --> R[Product Demand Ranking]
-P --> S[Monthly Purchase Trends]
-P --> T[Stock Risk Ranking]
-
-D --> U[Power BI Dashboard]
-
-U --> V[Procurement KPIs]
-U --> W[Vendor Ranking]
-U --> X[Product Demand Insights]
 ```
 
 ## System Design
