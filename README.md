@@ -18,6 +18,43 @@ The system is designed with a **fully normalized relational schema** and focuses
 
 ---
 
+## System Architecture
+
+```mermaid
+flowchart TD
+
+A[User / Application] --> B[Java Application Layer]
+B --> C[JDBC Connectivity]
+C --> D[(MySQL Database)]
+
+D --> E[vendors table]
+D --> F[products table]
+D --> G[inventory table]
+D --> H[purchase_orders table]
+D --> I[order_items table]
+
+B --> J[Inventory Management Logic]
+B --> K[Purchase Order Processing]
+B --> L[Transaction Management]
+
+L --> M[setAutoCommit false]
+L --> N[commit]
+L --> O[rollback]
+
+D --> P[Analytical SQL Reports]
+
+P --> Q[Vendor Spend Analysis]
+P --> R[Product Demand Ranking]
+P --> S[Monthly Purchase Trends]
+P --> T[Stock Risk Ranking]
+
+D --> U[Power BI Dashboard]
+
+U --> V[Procurement KPIs]
+U --> W[Vendor Ranking]
+U --> X[Product Demand Insights]
+```
+
 ## System Design
 The database consists of five core tables:
 
@@ -39,6 +76,17 @@ Key relationships:
 This structure ensures consistent data modeling and eliminates redundancy.
 
 ---
+
+## Database Schema
+
+```mermaid
+erDiagram
+    VENDORS ||--o{ PRODUCTS : supplies
+    PRODUCTS ||--|| INVENTORY : has
+    VENDORS ||--o{ PURCHASE_ORDERS : receives
+    PURCHASE_ORDERS ||--o{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : included_in
+```
 
 ## Dataset Scale
 To simulate realistic business operations, synthetic data was generated programmatically.
