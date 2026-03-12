@@ -140,18 +140,25 @@ These queries demonstrate strong SQL proficiency beyond basic CRUD operations.
 
 ---
 
-## Dashboard Integration
-A **Power BI dashboard** is built on top of the MySQL database to visualize key performance indicators.
+## Power BI Procurement Dashboard
 
-The dashboard displays:
+This project includes a Power BI dashboard for analyzing procurement data.
 
-- Total procurement spend  
-- Total purchase orders  
-- Vendor ranking  
-- Product demand trends  
-- Low-stock alerts  
+### Dashboard Features
+- Total Procurement Spend KPI
+- Vendor Spend Distribution
+- Monthly Procurement Spend Trend
+- Average Product Price Analysis
+- Interactive Vendor Filter
 
-This adds a **business intelligence layer** to the backend system and transforms transactional data into actionable insights.
+### Dashboard Preview
+
+![Procurement Dashboard](dashboard.png)
+
+### Power BI File
+The dashboard file is available here:
+
+procurement_inventory_dashboard.pbix
 
 ---
 
