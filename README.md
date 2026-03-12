@@ -156,9 +156,8 @@ This project includes a Power BI dashboard for analyzing procurement data.
 ![Procurement Dashboard](dashboard.png)
 
 ### Power BI File
-The dashboard file is available here:
 
-procurement_inventory_dashboard.pbix
+[Download Power BI Dashboard](procurement_inventory_dashboard.pbix)
 
 ---
 
